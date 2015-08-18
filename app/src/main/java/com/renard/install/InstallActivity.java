@@ -17,9 +17,7 @@
 package com.renard.install;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,9 +30,7 @@ import android.widget.ViewSwitcher;
 
 import com.renard.install.InstallActivity.InstallResult.Result;
 import com.renard.ocr.R;
-import com.renard.util.Util;
 
-import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -157,39 +153,6 @@ public class InstallActivity extends Activity {
     public Object onRetainNonConfigurationInstance() {
         mTask.detach();
         return (mTask);
-    }
-
-    /**
-     * @return if the language assets are installed or not
-     */
-    public static boolean IsInstalled(Context appContext) {
-
-        // check directories
-        File tessDir = Util.getTrainingDataDir(appContext);
-
-        if (!tessDir.exists()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * @return the total size of the language-assets in the zip file
-     */
-    static long getTotalUnzippedSize(AssetManager manager) {
-        /*
-         * long ret = 0; FileInputStream in = null; try { AssetFileDescriptor fd
-		 * = manager.openFd(TESSDATA_FILE_NAME); ret = fd.getLength(); if (ret
-		 * == AssetFileDescriptor.UNKNOWN_LENGTH) { in = fd.createInputStream();
-		 * ret = 0; byte[] buffer = new byte[1024]; int bytesRead = 0; while
-		 * ((bytesRead = in.read(buffer)) != -1) { ret += bytesRead; } } } catch
-		 * (IOException ioe) { Log.v(DEBUG_TAG, "exception:" + ioe.toString());
-		 * return 0; } finally { if (in != null) { try { in.close(); } catch
-		 * (IOException ignore) { } } } return ret;
-		 */
-        // return 5374633;
-        return 24314653;
     }
 
     public void markAsDone(InstallResult result) {

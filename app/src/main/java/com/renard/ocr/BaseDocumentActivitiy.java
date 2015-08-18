@@ -16,15 +16,6 @@
 
 package com.renard.ocr;
 
-import com.googlecode.leptonica.android.Pix;
-import com.renard.documentview.DocumentActivity;
-import com.renard.ocr.DocumentContentProvider.Columns;
-import com.renard.ocr.cropimage.CropImageActivity;
-import com.renard.ocr.cropimage.MonitoredActivity;
-import com.renard.pdf.Hocr2Pdf;
-import com.renard.pdf.Hocr2Pdf.PDFProgressListener;
-import com.renard.util.Util;
-
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -64,6 +55,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.googlecode.leptonica.android.Pix;
+import com.renard.documentview.DocumentActivity;
+import com.renard.ocr.DocumentContentProvider.Columns;
+import com.renard.ocr.cropimage.CropImageActivity;
+import com.renard.ocr.cropimage.MonitoredActivity;
+import com.renard.pdf.Hocr2Pdf;
+import com.renard.pdf.Hocr2Pdf.PDFProgressListener;
+import com.renard.util.Util;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -381,12 +381,16 @@ public abstract class BaseDocumentActivitiy extends MonitoredActivity {
         }
     }
 
-    void startOcrActivity(long nativePix, boolean accessibilityMode) {
-        Intent intent = new Intent(this, OCRActivity.class);
+    protected void startOcrActivity(long nativePix, boolean accessibilityMode) {
+        Intent intent = new Intent(this, getOCRActivityClass());
         intent.putExtra(EXTRA_NATIVE_PIX, nativePix);
         intent.putExtra(OCRActivity.EXTRA_USE_ACCESSIBILITY_MODE, accessibilityMode);
         intent.putExtra(OCRActivity.EXTRA_PARENT_DOCUMENT_ID, getParentId());
         startActivityForResult(intent, REQUEST_CODE_OCR);
+    }
+
+    protected Class getOCRActivityClass() {
+        return OCRActivity.class;
     }
 
     @Override

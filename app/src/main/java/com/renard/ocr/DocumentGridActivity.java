@@ -15,7 +15,6 @@
  */
 package com.renard.ocr;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -28,7 +27,6 @@ import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -53,7 +51,7 @@ import android.widget.Toast;
 import com.renard.documentview.DocumentActivity;
 import com.renard.drawable.CrossFadeDrawable;
 import com.renard.drawable.FastBitmapDrawable;
-import com.renard.install.InstallActivity;
+import com.renard.install.InstallHelper;
 import com.renard.ocr.DocumentAdapter.DocumentViewHolder;
 import com.renard.ocr.DocumentAdapter.OnCheckedChangeListener;
 import com.renard.ocr.help.AboutActivity;
@@ -86,7 +84,6 @@ public class DocumentGridActivity extends BaseDocumentActivitiy implements OnChe
 	private static final int JOIN_PROGRESS_DIALOG = 4;
 	private ActionMode mActionMode;
     private ActionBarDrawerToggle mDrawerToggle;
-    private static final int REQUEST_CODE_INSTALL = 234;
 
 	/**
 	 * global state
@@ -108,7 +105,8 @@ public class DocumentGridActivity extends BaseDocumentActivitiy implements OnChe
         initNavigationDrawer();
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		initGridView();
-        startInstallActivityIfNeeded();
+
+        InstallHelper.startInstallActivityIfNeeded(this);
         final int columnWidth = Util.determineThumbnailSize(this, null);
         Util.setThumbnailSize(columnWidth, columnWidth, this);
 		if(savedInstanceState==null) {
@@ -118,12 +116,12 @@ public class DocumentGridActivity extends BaseDocumentActivitiy implements OnChe
         //setup the load language button that is shown when the grid is empty
         final View viewById = findViewById(R.id.install_language_button);
         viewById.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(DocumentGridActivity.this, OCRLanguageActivity.class);
-                startActivity(i);
-            }
-        });
+					@Override
+					public void onClick(View v) {
+						Intent i = new Intent(DocumentGridActivity.this, OCRLanguageActivity.class);
+						startActivity(i);
+					}
+				});
     }
 
     @Override
@@ -151,35 +149,6 @@ public class DocumentGridActivity extends BaseDocumentActivitiy implements OnChe
                 });
             }
 
-        }
-    }
-
-    /**
-     * Start the InstallActivity if possible and needed.
-     */
-    private void startInstallActivityIfNeeded() {
-        final String state = Environment.getExternalStorageState();
-        if (state.equals(Environment.MEDIA_MOUNTED)) {
-            if (!InstallActivity.IsInstalled(this)) {
-                // install the languages if needed, create directory structure
-                // (one
-                // time)
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setClassName(this, com.renard.install.InstallActivity.class.getName());
-                startActivityForResult(intent, REQUEST_CODE_INSTALL);
-            }
-        } else {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            // alert.setTitle(R.string.no_sd_card);
-            alert.setMessage(getString(R.string.no_sd_card));
-            alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
-                }
-            });
-            alert.show();
         }
     }
 
@@ -245,7 +214,7 @@ public class DocumentGridActivity extends BaseDocumentActivitiy implements OnChe
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_INSTALL) {
+        if (requestCode == InstallHelper.REQUEST_CODE_INSTALL) {
             if (RESULT_OK == resultCode) {
                 // install successfull, show happy fairy or introduction text
 

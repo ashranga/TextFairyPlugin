@@ -226,4 +226,8 @@
     <string name="first_time_bad_result">Please read the tips or send me your feedback and I\'ll try to help you.
     </string>
     <string name="start_scan">Start</string>
+    <string name="title_activity_plugin_start">TextFairy Plugin</string>
+
+    <string name="take_another_picture">Take another picture</string>
+    <string name="return_to_calling_application">Done</string>
 </resources>

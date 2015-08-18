@@ -54,7 +54,7 @@ public class InstallTask extends AsyncTask<Void, Integer, InstallResult> {
 	@Override
 	protected InstallResult doInBackground(Void... unused) {
 		long freeSpace = Util.GetFreeSpaceB();
-		mBytesToInstallTotal = InstallActivity.getTotalUnzippedSize(mAssetManager);
+		mBytesToInstallTotal = InstallHelper.getTotalUnzippedSize(mAssetManager);
 		if (freeSpace < mBytesToInstallTotal) {
 			return new InstallResult(Result.NOT_ENOUGH_DISK_SPACE, mBytesToInstallTotal, freeSpace);
 		}
