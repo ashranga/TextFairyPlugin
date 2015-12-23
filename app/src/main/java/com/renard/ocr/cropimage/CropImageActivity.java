@@ -17,19 +17,6 @@
 
 package com.renard.ocr.cropimage;
 
-import com.google.common.base.Optional;
-
-import com.googlecode.leptonica.android.Box;
-import com.googlecode.leptonica.android.Clip;
-import com.googlecode.leptonica.android.Pix;
-import com.googlecode.leptonica.android.Projective;
-import com.googlecode.leptonica.android.Rotate;
-import com.googlecode.tesseract.android.OCR;
-import com.renard.ocr.DocumentGridActivity;
-import com.renard.ocr.R;
-import com.renard.ocr.help.HintDialog;
-import com.renard.util.Util;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -47,6 +34,18 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.AdapterView;
 import android.widget.ViewSwitcher;
+
+import com.google.common.base.Optional;
+import com.googlecode.leptonica.android.Box;
+import com.googlecode.leptonica.android.Clip;
+import com.googlecode.leptonica.android.Pix;
+import com.googlecode.leptonica.android.Projective;
+import com.googlecode.leptonica.android.Rotate;
+import com.googlecode.tesseract.android.OCR;
+import com.renard.ocr.DocumentGridActivity;
+import com.renard.ocr.R;
+import com.renard.ocr.help.HintDialog;
+import com.renard.util.Util;
 
 import de.greenrobot.event.EventBus;
 
@@ -316,15 +315,7 @@ public class CropImageActivity extends MonitoredActivity implements ImageBlurred
 
         Rect imageRect = new Rect(0, 0, width, height);
 
-        // make the default size about 4/5 of the width or height
-        int cropWidth = Math.min(width, height) * 4 / 5;
-        int cropHeight = cropWidth;
-
-
-        int x = (width - cropWidth) / 2;
-        int y = (height - cropHeight) / 2;
-
-        RectF cropRect = new RectF(x, y, x + cropWidth, y + cropHeight);
+        RectF cropRect = createDefaultCroppingRectangle(width, height);
 
         CropHighlightView hv = new CropHighlightView(mImageView, imageRect, cropRect);
 
@@ -333,6 +324,18 @@ public class CropImageActivity extends MonitoredActivity implements ImageBlurred
         mCrop = hv;
         mCrop.setFocus(true);
         mImageView.invalidate();
+    }
+
+    protected RectF createDefaultCroppingRectangle(int width, int height) {
+        // make the default size about 4/5 of the width or height
+        int cropWidth = Math.min(width, height) * 4 / 5;
+        int cropHeight = cropWidth;
+
+
+        int x = (width - cropWidth) / 2;
+        int y = (height - cropHeight) / 2;
+
+        return new RectF(x, y, x + cropWidth, y + cropHeight);
     }
 
     @Override

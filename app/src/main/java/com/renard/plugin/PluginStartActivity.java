@@ -68,6 +68,11 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
   }
 
   @Override
+  protected Class getCropImageActivityClass() {
+    return PluginCropImageActivity.class;
+  }
+
+  @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if(requestCode == REQUEST_CODE_OCR) {
       if(lastHandledIntent != null && lastHandledIntent.hasExtra(Constants.INTENT_KEY_IMAGE_TO_RECOGNIZE_URI)) // we were only ask to do OCR on an image, don't ask User if she/he likes to process

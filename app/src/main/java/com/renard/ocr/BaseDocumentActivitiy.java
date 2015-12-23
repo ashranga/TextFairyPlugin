@@ -437,7 +437,7 @@ public abstract class BaseDocumentActivitiy extends MonitoredActivity {
             if (skipCrop) {
                 startOcrActivity(nativePix, true);
             } else {
-                Intent actionIntent = new Intent(this, CropImageActivity.class);
+                Intent actionIntent = new Intent(this, getCropImageActivityClass());
                 actionIntent.putExtra(BaseDocumentActivitiy.EXTRA_NATIVE_PIX, nativePix);
                 actionIntent.putExtra(BaseDocumentActivitiy.EXTRA_ROTATION, rotateXDegrees);
                 startActivityForResult(actionIntent, BaseDocumentActivitiy.REQUEST_CODE_CROP_PHOTO);
@@ -445,6 +445,10 @@ public abstract class BaseDocumentActivitiy extends MonitoredActivity {
         } else {
             showFileError(status);
         }
+    }
+
+    protected Class getCropImageActivityClass() {
+        return CropImageActivity.class;
     }
 
     private void dismissLoadingImageProgressDialog() {

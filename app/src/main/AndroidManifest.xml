@@ -190,6 +190,18 @@
                 android:value="com.renard.plugin.PluginStartActivity" />
         </activity>
 
+        <activity
+            android:name="com.renard.plugin.PluginCropImageActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/crop_title"
+            android:logo="@drawable/textfairy_title"
+            android:uiOptions="splitActionBarWhenNarrow" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.renard.plugin.PluginStartActivity" />
+
+        </activity>
+
     </application>
 
 </manifest>
