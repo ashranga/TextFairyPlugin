@@ -2,6 +2,7 @@ package com.renard.plugin;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.renard.install.InstallHelper;
 import com.renard.ocr.BaseDocumentActivitiy;
+import com.renard.ocr.ImageSource;
 import com.renard.ocr.R;
 
 import org.slf4j.Logger;
@@ -19,6 +21,8 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
 
   private final static Logger log = LoggerFactory.getLogger(PluginStartActivity.class);
 
+  protected static Intent lastHandledIntent = null;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +31,30 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
 
     InstallHelper.startInstallActivityIfNeeded(this);
 
-    startCamera();
+    Intent intent = getIntent();
+    if(intent == null)
+      startCamera();
+    else if(intent != lastHandledIntent) {
+      lastHandledIntent = intent;
+      handleIntent(intent);
+    }
+  }
+
+  protected void handleIntent(Intent intent) {
+    if(intent.hasExtra(Constants.INTENT_KEY_IMAGE_TO_RECOGNIZE_URI)) {
+      String imageUriString = intent.getStringExtra(Constants.INTENT_KEY_IMAGE_TO_RECOGNIZE_URI);
+      if(imageUriString != null) {
+        Uri imageUri = Uri.parse(imageUriString); // TODO: if imageUri points a Web image, download image
+        boolean showSettingsUi = intent.getBooleanExtra(Constants.INTENT_KEY_SHOW_SETTINGS_UI, false);
+
+        loadBitmapFromContentUri(imageUri, ImageSource.INTENT, !showSettingsUi);
+      }
+    }
+    else if(intent.hasExtra(Constants.INTENT_KEY_CAPTURE_IMAGE)) {
+      boolean captureImage = intent.getBooleanExtra(Constants.INTENT_KEY_CAPTURE_IMAGE, true);
+      if(captureImage)
+        startCamera();
+    }
   }
 
   @Override
@@ -43,7 +70,10 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if(requestCode == REQUEST_CODE_OCR) {
-      askUserHowToProceed();
+      if(lastHandledIntent != null && lastHandledIntent.hasExtra(Constants.INTENT_KEY_IMAGE_TO_RECOGNIZE_URI)) // we were only ask to do OCR on an image, don't ask User if she/he likes to process
+      returnToCallingApplication();
+      else
+        askUserHowToProceed();
     }
     else
       super.onActivityResult(requestCode, resultCode, data);

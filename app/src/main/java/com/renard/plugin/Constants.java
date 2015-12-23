@@ -5,6 +5,15 @@ package com.renard.plugin;
  */
 public class Constants {
 
+  public final static String INTENT_KEY_CAPTURE_IMAGE = "CaptureImage";
+
+  public final static String INTENT_KEY_IMAGE_TO_RECOGNIZE_URI = "ImageUri";
+
+  public final static String INTENT_KEY_SHOW_SETTINGS_UI = "ShowSettingsUi";
+
+  public final static String INTENT_KEY_SHOW_MESSAGE_ON_REMOTE_DEVICE_WHEN_PROCESSING_DONE = "ShowMessageOnRemoteDeviceWhenProcessingDone";
+
+
   public final static String SEND_OCR_RESULT_INTENT_ACTION = "TextFairyOcrResult";
 
   public final static String IS_USER_CANCELLED_OCR_RESULT_EXTRA_NAME = "UserCancelled";

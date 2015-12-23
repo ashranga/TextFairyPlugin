@@ -315,18 +315,22 @@ public abstract class BaseDocumentActivitiy extends MonitoredActivity {
     }
 
     protected void loadBitmapFromContentUri(final Uri cameraPicUri, ImageSource source) {
-        mImageSource = source;
-        if (mBitmapLoadTask != null) {
-            mBitmapLoadTask.cancel(true);
-        }
         AccessibilityManager am = (AccessibilityManager) getSystemService(ACCESSIBILITY_SERVICE);
         boolean isAccessibilityEnabled = am.isEnabled();
         boolean isExploreByTouchEnabled = AccessibilityManagerCompat.isTouchExplorationEnabled(am);
         final boolean skipCrop = isExploreByTouchEnabled && isAccessibilityEnabled;
 
+        loadBitmapFromContentUri(cameraPicUri, source, skipCrop);
+    }
+
+    protected void loadBitmapFromContentUri(final Uri cameraPicUri, ImageSource source, final boolean skipCrop) {
+        mImageSource = source;
+        if (mBitmapLoadTask != null) {
+            mBitmapLoadTask.cancel(true);
+        }
+
         registerImageLoaderReceiver();
         mBitmapLoadTask = new ImageLoadAsyncTask(this, skipCrop, rotateXDegrees, cameraPicUri).execute();
-
     }
 
     private synchronized void unRegisterImageLoadedReceiver() {
