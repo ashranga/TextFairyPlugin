@@ -13,6 +13,7 @@ import com.renard.install.InstallHelper;
 import com.renard.ocr.BaseDocumentActivitiy;
 import com.renard.ocr.ImageSource;
 import com.renard.ocr.R;
+import com.renard.ocr.cropimage.CropImageActivity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,18 +77,18 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
     builder.setCancelable(false);
 
     try {
-      View view = getLayoutInflater().inflate(R.layout.dialog_ask_user_how_to_proceed, null);
+      View view = getLayoutInflater().inflate(R.layout.dialog_ask_user_for_recognition_source, null);
 
-      TextView txtvwTakeAnotherPicture = (TextView) view.findViewById(R.id.txtvwTakeAnotherPicture);
-      txtvwTakeAnotherPicture.setOnClickListener(new View.OnClickListener() {
+      TextView txtvwTakePicture = (TextView) view.findViewById(R.id.txtvwTakePicture);
+      txtvwTakePicture.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
           startCamera();
         }
       });
 
-      TextView txtvwSelectAnotherPictureFromGallery = (TextView) view.findViewById(R.id.txtvwSelectAnotherPictureFromGallery);
-      txtvwSelectAnotherPictureFromGallery.setOnClickListener(new View.OnClickListener() {
+      TextView txtvwSelectPictureFromGallery = (TextView) view.findViewById(R.id.txtvwSelectPictureFromGallery);
+      txtvwSelectPictureFromGallery.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
           startGallery();
@@ -102,10 +103,11 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
         }
       });
 
+
       builder.setView(view);
       builder.create().show();
     } catch(Exception ex) {
-      log.error("Could not show dialog_ask_user_how_to_proceed", ex);
+      log.error("Could not show dialog_ask_user_for_recognition_source", ex);
       returnToCallingApplication();
     }
   }
@@ -128,14 +130,22 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if(requestCode == REQUEST_CODE_OCR) {
-      if(lastHandledIntent != null && lastHandledIntent.hasExtra(Constants.INTENT_KEY_IMAGE_TO_RECOGNIZE_URI)) // we were only ask to do OCR on an image, don't ask User if she/he likes to process
-      returnToCallingApplication();
-      else
+    if (requestCode == REQUEST_CODE_OCR) {
+      if (lastHandledIntent != null && lastHandledIntent.hasExtra(Constants.INTENT_KEY_IMAGE_TO_RECOGNIZE_URI)) { // we were only ask to do OCR on an image, don't ask User if she/he likes to process
+        returnToCallingApplication();
+      } else {
         askUserHowToProceed();
+      }
     }
-    else
+    else if(resultCode == RESULT_OK || isTakeNewImageActivityResult(requestCode, resultCode, data)) { // let BaseDocumentActivity handle this result
       super.onActivityResult(requestCode, resultCode, data);
+    } else { // previous Action (take picture / select picture from gallery) has been cancelled
+      askUserHowToProceed();
+    }
+  }
+
+  protected boolean isTakeNewImageActivityResult(int requestCode, int resultCode, Intent data) {
+    return requestCode == REQUEST_CODE_CROP_PHOTO && resultCode == CropImageActivity.RESULT_NEW_IMAGE;
   }
 
   protected void askUserHowToProceed() {
@@ -150,6 +160,14 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
         @Override
         public void onClick(View v) {
           startCamera();
+        }
+      });
+
+      TextView txtvwSelectAnotherPictureFromGallery = (TextView) view.findViewById(R.id.txtvwSelectAnotherPictureFromGallery);
+      txtvwSelectAnotherPictureFromGallery.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          startGallery();
         }
       });
 

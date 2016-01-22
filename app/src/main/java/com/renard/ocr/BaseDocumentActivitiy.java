@@ -103,9 +103,9 @@ public abstract class BaseDocumentActivitiy extends MonitoredActivity {
     private static final String DIALOG_ARG_TITLE = "title";
     private static final String DIALOG_ARG_DOCUMENT_URI = "document_uri";
 
-    private final static int REQUEST_CODE_MAKE_PHOTO = 0;
-    private final static int REQUEST_CODE_PICK_PHOTO = 1;
-    final static int REQUEST_CODE_CROP_PHOTO = 2;
+    protected final static int REQUEST_CODE_MAKE_PHOTO = 0;
+    protected final static int REQUEST_CODE_PICK_PHOTO = 1;
+    protected final static int REQUEST_CODE_CROP_PHOTO = 2;
     protected final static int REQUEST_CODE_OCR = 3;
 
     private static final String DATE_CAMERA_INTENT_STARTED_STATE = "com.renard.ocr.android.photo.TakePhotoActivity.dateCameraIntentStarted";
