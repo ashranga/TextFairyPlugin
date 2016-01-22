@@ -13,6 +13,14 @@
         android:text="@string/take_another_picture"/>
 
     <TextView
+        android:id="@+id/txtvwSelectAnotherPictureFromGallery"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/plugin_ask_user_how_to_proceed_option_height"
+        android:textSize="@dimen/plugin_ask_user_how_to_proceed_text_size"
+        android:gravity="center"
+        android:text="@string/select_another_picture_from_gallery"/>
+
+    <TextView
         android:id="@+id/txtvwReturnToCallingApplication"
         android:layout_width="match_parent"
         android:layout_height="@dimen/plugin_ask_user_how_to_proceed_option_height"

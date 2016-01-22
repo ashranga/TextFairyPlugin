@@ -222,6 +222,15 @@
     <string name="first_time_bad_result">Bitte lies die Tipps oder sende mir Feedback damit ich dir
         helfen kann.
     </string>
+
     <string name="start_scan">Start</string>
+    <string name="title_activity_plugin_start">TextFairy Plugin</string>
+
+    <string name="take_picture">Bild aufnehmen</string>
+    <string name="select_picture_from_gallery">Bild aus der Gallerie auswählen</string>
+
+    <string name="take_another_picture">Weiteres Bild aufnehmen</string>
+    <string name="select_another_picture_from_gallery">Weiteres Bild aus der Gallerie auswählen</string>
+    <string name="return_to_calling_application">Fertig</string>
 
 </resources>

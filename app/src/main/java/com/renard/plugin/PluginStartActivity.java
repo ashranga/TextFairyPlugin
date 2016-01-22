@@ -41,21 +41,75 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
   }
 
   protected void handleIntent(Intent intent) {
-    if(intent.hasExtra(Constants.INTENT_KEY_IMAGE_TO_RECOGNIZE_URI)) {
-      String imageUriString = intent.getStringExtra(Constants.INTENT_KEY_IMAGE_TO_RECOGNIZE_URI);
-      if(imageUriString != null) {
-        Uri imageUri = Uri.parse(imageUriString); // TODO: if imageUri points a Web image, download image
-        boolean showSettingsUi = intent.getBooleanExtra(Constants.INTENT_KEY_SHOW_SETTINGS_UI, false);
+    if(intent.hasExtra(Constants.INTENT_KEY_RECOGNITION_SOURCE)) {
+      String recognitionSource = intent.getStringExtra(Constants.INTENT_KEY_RECOGNITION_SOURCE);
 
-        loadBitmapFromContentUri(imageUri, ImageSource.INTENT, !showSettingsUi);
-      }
-    }
-    else if(intent.hasExtra(Constants.INTENT_KEY_CAPTURE_IMAGE)) {
-      boolean captureImage = intent.getBooleanExtra(Constants.INTENT_KEY_CAPTURE_IMAGE, true);
-      if(captureImage)
+      if(Constants.RECOGNITION_SOURCE_RECOGNIZE_FROM_URI.equals(recognitionSource)) {
+        recognizeTextOfAProvidedImage(intent);
+      } else if(Constants.RECOGNITION_SOURCE_CAPTURE_IMAGE.equals(recognitionSource)) {
         startCamera();
+      } else if(Constants.RECOGNITION_SOURCE_GET_FROM_GALLERY.equals(recognitionSource)) {
+        startGallery();
+      } else { // if recognitionSource equals Constants.RECOGNITION_SOURCE_ASK_USER or an unknown value is supplied
+        askUserForRecognitionSource();
+      }
+    } else {
+      askUserForRecognitionSource();
     }
   }
+
+  protected void recognizeTextOfAProvidedImage(Intent intent) {
+    String imageUriString = intent.getStringExtra(Constants.INTENT_KEY_IMAGE_TO_RECOGNIZE_URI);
+    if(imageUriString != null) {
+      Uri imageUri = Uri.parse(imageUriString); // TODO: if imageUri points a Web image, download image
+      boolean showSettingsUi = intent.getBooleanExtra(Constants.INTENT_KEY_SHOW_SETTINGS_UI, false);
+
+      loadBitmapFromContentUri(imageUri, ImageSource.INTENT, !showSettingsUi);
+    }
+    else {
+      // TODO: show Alert that Image Source is not set
+    }
+  }
+
+  protected void askUserForRecognitionSource() {
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setCancelable(false);
+
+    try {
+      View view = getLayoutInflater().inflate(R.layout.dialog_ask_user_how_to_proceed, null);
+
+      TextView txtvwTakeAnotherPicture = (TextView) view.findViewById(R.id.txtvwTakeAnotherPicture);
+      txtvwTakeAnotherPicture.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          startCamera();
+        }
+      });
+
+      TextView txtvwSelectAnotherPictureFromGallery = (TextView) view.findViewById(R.id.txtvwSelectAnotherPictureFromGallery);
+      txtvwSelectAnotherPictureFromGallery.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          startGallery();
+        }
+      });
+
+      TextView txtvwReturnToCallingApplication = (TextView) view.findViewById(R.id.txtvwReturnToCallingApplication);
+      txtvwReturnToCallingApplication.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          returnToCallingApplication();
+        }
+      });
+
+      builder.setView(view);
+      builder.create().show();
+    } catch(Exception ex) {
+      log.error("Could not show dialog_ask_user_how_to_proceed", ex);
+      returnToCallingApplication();
+    }
+  }
+
 
   @Override
   protected int getParentId() {

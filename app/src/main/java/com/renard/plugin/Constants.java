@@ -5,13 +5,20 @@ package com.renard.plugin;
  */
 public class Constants {
 
-  public final static String INTENT_KEY_CAPTURE_IMAGE = "CaptureImage";
+  public final static String INTENT_KEY_RECOGNITION_SOURCE = "RecognitionSource";
+
+  public final static String RECOGNITION_SOURCE_RECOGNIZE_FROM_URI = "RecognizeFromUri";
+
+  public final static String RECOGNITION_SOURCE_CAPTURE_IMAGE = "CaptureImage";
+
+  public final static String RECOGNITION_SOURCE_GET_FROM_GALLERY = "GetFromGallery";
+
+  public final static String RECOGNITION_SOURCE_ASK_USER = "AskUser";
+
 
   public final static String INTENT_KEY_IMAGE_TO_RECOGNIZE_URI = "ImageUri";
 
   public final static String INTENT_KEY_SHOW_SETTINGS_UI = "ShowSettingsUi";
-
-  public final static String INTENT_KEY_SHOW_MESSAGE_ON_REMOTE_DEVICE_WHEN_PROCESSING_DONE = "ShowMessageOnRemoteDeviceWhenProcessingDone";
 
 
   public final static String SEND_OCR_RESULT_INTENT_ACTION = "TextFairyOcrResult";
