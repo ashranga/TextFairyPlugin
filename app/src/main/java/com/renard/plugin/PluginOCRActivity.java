@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.os.RemoteException;
 
 import com.googlecode.leptonica.android.Pix;
-import com.renard.ocr.LayoutQuestionDialog;
 import com.renard.ocr.OCRActivity;
+import com.renard.util.PreferencesUtils;
 import com.renard.util.Screen;
 
 import java.io.File;
@@ -42,11 +42,7 @@ public class PluginOCRActivity extends OCRActivity {
 
   @Override
   protected void askUserAboutDocumentLayout(Pix pixOrg, boolean accessibility) {
-    // TODO: just set layout properties and continue to read text
-    String ocrLanguage = "deu";
-    LayoutQuestionDialog.LayoutKind layoutKind = LayoutQuestionDialog.LayoutKind.SIMPLE;
-
-    startOcrLayoutAnalysis(pixOrg, ocrLanguage, layoutKind);
+    startOcrLayoutAnalysis(pixOrg, PreferencesUtils.getPluginLastSelectedOCRLanguage(this), PreferencesUtils.getPluginLastSelectedLayoutKind(this));
   }
 
   // avoid saving documents / images
