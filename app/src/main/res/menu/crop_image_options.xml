@@ -12,6 +12,14 @@
             android:icon="@drawable/ic_action_rotate_left"
             yourapp:showAsAction="always"
             android:title="@string/rotate_left"/>
+
+    <item
+        android:id="@+id/item_chosen_language_and_layout"
+        yourapp:showAsAction="always"
+        android:visible="false"
+        yourapp:actionLayout="@layout/menu_item_chose_language_and_layout"
+        android:title="@string/menu_item_set_language_and_layout_title"/>
+
     <item
             android:id="@+id/item_save"
             android:icon="@drawable/ic_action_save"

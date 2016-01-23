@@ -15,15 +15,16 @@
  */
 package com.renard.util;
 
-import com.renard.ocr.R;
-import com.renard.ocr.help.OCRLanguageAdapter.OCRLanguage;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Pair;
 import android.view.Gravity;
 import android.widget.TextView;
+
+import com.renard.ocr.LayoutQuestionDialog;
+import com.renard.ocr.R;
+import com.renard.ocr.help.OCRLanguageAdapter.OCRLanguage;
 
 public class PreferencesUtils {
 
@@ -43,6 +44,10 @@ public class PreferencesUtils {
     private static final String PREFERENCES_THUMBNAIL_WIDTH = "thumbnail_height";
     private static final String PREFERENCES_HAS_ASKED_FOR_FEEDBACK = "has_asked_for_feedback";
 
+    public final static String PLUGIN_PREFERENCES_OCR_LANG = "plugin_ocr_language";
+    public final static String PLUGIN_PREFERENCES_PAGE_LAYOUT = "plugin_page_layout";
+
+
     public static void initPreferencesWithDefaultsIfEmpty(Context appContext) {
         SharedPreferences prefs = getPreferences(appContext);
         Editor edit = prefs.edit();
@@ -53,6 +58,11 @@ public class PreferencesUtils {
         final String defaultLanguageDisplay = appContext.getString(R.string.default_ocr_display_language);
         setIfEmpty(edit, prefs, PREFERENCES_OCR_LANG, defaultLanguage);
         setIfEmpty(edit, prefs, PREFERENCES_OCR_LANG_DISPLAY, defaultLanguageDisplay);
+        setIfEmpty(edit, prefs, PREFERENCES_OCR_LANG_DISPLAY, defaultLanguageDisplay);
+
+        setIfEmpty(edit, prefs, PLUGIN_PREFERENCES_OCR_LANG, defaultLanguage);
+        setIfEmpty(edit, prefs, PLUGIN_PREFERENCES_PAGE_LAYOUT, LayoutQuestionDialog.LayoutKind.SIMPLE.toString());
+
         edit.apply();
     }
 
@@ -195,6 +205,32 @@ public class PreferencesUtils {
         Editor edit = prefs.edit();
         edit.putInt(PREFERENCES_THUMBNAIL_WIDTH, w);
         edit.putInt(PREFERENCES_THUMBNAIL_HEIGHT, h);
+        edit.apply();
+    }
+
+
+    public static String getPluginLastSelectedOCRLanguage(final Context context) {
+        SharedPreferences prefs = getPreferences(context);
+        return prefs.getString(PLUGIN_PREFERENCES_OCR_LANG, null);
+    }
+
+    public static void savePluginLastSelectedOCRLanguage(final Context context, String language) {
+        SharedPreferences prefs = getPreferences(context);
+        Editor edit = prefs.edit();
+        edit.putString(PLUGIN_PREFERENCES_OCR_LANG, language);
+        edit.apply();
+    }
+
+    public static LayoutQuestionDialog.LayoutKind getPluginLastSelectedLayoutKind(final Context context) {
+        SharedPreferences prefs = getPreferences(context);
+        String value = prefs.getString(PLUGIN_PREFERENCES_PAGE_LAYOUT, LayoutQuestionDialog.LayoutKind.SIMPLE.toString());
+        return LayoutQuestionDialog.LayoutKind.valueOf(value);
+    }
+
+    public static void savePluginLastSelectedLayoutKind(final Context context, LayoutQuestionDialog.LayoutKind layout) {
+        SharedPreferences prefs = getPreferences(context);
+        Editor edit = prefs.edit();
+        edit.putString(PLUGIN_PREFERENCES_PAGE_LAYOUT, layout.toString());
         edit.apply();
     }
 

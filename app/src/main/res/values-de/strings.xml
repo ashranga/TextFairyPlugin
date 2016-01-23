@@ -233,4 +233,6 @@
     <string name="select_another_picture_from_gallery">Weiteres Bild aus der Gallerie auswählen</string>
     <string name="return_to_calling_application">Fertig</string>
 
+    <string name="menu_item_set_language_and_layout_title">Sprache und Layout setzen</string>
+
 </resources>

@@ -18,34 +18,24 @@ package com.renard.ocr;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.util.Pair;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
-import android.widget.TextView;
 import android.widget.ViewFlipper;
 import android.widget.ViewSwitcher;
 
 import com.renard.ocr.help.OCRLanguageActivity;
-import com.renard.ocr.help.OCRLanguageAdapter;
 import com.renard.ocr.help.OCRLanguageAdapter.OCRLanguage;
 import com.renard.util.PreferencesUtils;
 
 import java.util.List;
-
-import static android.widget.ArrayAdapter.*;
 
 public class LayoutQuestionDialog {
 
@@ -55,14 +45,13 @@ public class LayoutQuestionDialog {
 
     private static LayoutKind mLayout = LayoutKind.SIMPLE;
     private static String mLanguage;
+    private static OCRLanguage mOcrLanguage;
 
     public interface LayoutChoseListener {
         void onLayoutChosen(final LayoutKind layoutKind, final String language);
     }
 
     public static AlertDialog createDialog(final Context context, final LayoutChoseListener listener, boolean accessibility) {
-
-        mLayout = null;
         Pair<String, String> language = PreferencesUtils.getOCRLanguage(context);
 
         if (!OCRLanguageActivity.isLanguageInstalled(language.first, context)) {
@@ -70,7 +59,22 @@ public class LayoutQuestionDialog {
             final String defaultLanguageDisplay = context.getString(R.string.default_ocr_display_language);
             language = Pair.create(defaultLanguage, defaultLanguageDisplay);
         }
-        mLanguage = language.first;
+
+        LayoutChoseListener saveSelectedValuesListener = new LayoutChoseListener() {
+            @Override
+            public void onLayoutChosen(LayoutKind layoutKind, String language) {
+                PreferencesUtils.saveOCRLanguage(context, mOcrLanguage);
+                listener.onLayoutChosen(layoutKind, language);
+            }
+        };
+
+        return createDialog(context, saveSelectedValuesListener, accessibility, LayoutKind.SIMPLE, language.first, false);
+    }
+
+    public static AlertDialog createDialog(final Context context, final LayoutChoseListener listener, boolean accessibility, LayoutKind layoutKind, String language, boolean
+        showInstallLanguageButton) {
+        mLayout = layoutKind;
+        mLanguage = language;
 
         AlertDialog.Builder builder;
 
@@ -125,6 +129,14 @@ public class LayoutQuestionDialog {
             }
         });
 
+        mLayout = null; // temporarily set to null so that ClickListeners will be executed
+        if(layoutKind == LayoutKind.SIMPLE) {
+            pageLayout.performClick();
+        }
+        else if(layoutKind == LayoutKind.COMPLEX) {
+            columnLayout.performClick();
+        }
+
 
         final Spinner langButton = (Spinner) layout.findViewById(R.id.button_language);
         List<OCRLanguage> installedLanguages = OCRLanguageActivity.getInstalledOCRLanguages(context);
@@ -135,7 +147,7 @@ public class LayoutQuestionDialog {
         langButton.setAdapter(adapter);
         for(int i = 0; i < installedLanguages.size(); i++){
             OCRLanguage lang = installedLanguages.get(i);
-            if(lang.getValue().equals(language.first)){
+            if(lang.getValue().equals(mLanguage)){
                 langButton.setSelection(i);
                 break;
             }
@@ -144,8 +156,8 @@ public class LayoutQuestionDialog {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 final OCRLanguage item = adapter.getItem(position);
+                mOcrLanguage = item;
                 mLanguage = item.getValue();
-                PreferencesUtils.saveOCRLanguage(context, item);
             }
 
             @Override

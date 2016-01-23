@@ -235,4 +235,7 @@
     <string name="take_another_picture">Take another picture</string>
     <string name="select_another_picture_from_gallery">Select another picture from Gallery</string>
     <string name="return_to_calling_application">Done</string>
+
+    <string name="menu_item_set_language_and_layout_title">Set Language and Layout</string>
+
 </resources>
