@@ -54,6 +54,7 @@
     <string name="progress_ocr">Lese Text..</string>
     <string name="delete">Löschen</string>
     <string name="edit_title">Ändere Titel</string>
+    <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>
     <string name="edit_dialog_title">Gib einen Titel für dein Dokument ein.</string>
     <string name="delete_error">Sorry, ich konnte das Dokument nicht löschen.</string>

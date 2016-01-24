@@ -55,6 +55,7 @@
     <string name="progress_ocr">Reading text</string>
     <string name="delete">Delete </string>
     <string name="edit_title">Change title</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="edit_dialog_title">Enter a title for your document</string>
     <string name="delete_error">Sorry, I could not delete this document</string>

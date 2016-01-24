@@ -167,7 +167,12 @@ public class LayoutQuestionDialog {
         });
 
 
-        builder.setPositiveButton(R.string.start_scan,
+        int positiveButtonText = R.string.start_scan;
+        if(showInstallLanguageButton) { // really bad logic: as currently install button is only shown when dialog is created from PluginCropImageActivity, adjust positive button's caption
+            positiveButtonText = R.string.ok;
+        }
+
+        builder.setPositiveButton(positiveButtonText,
                 new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int id) {
