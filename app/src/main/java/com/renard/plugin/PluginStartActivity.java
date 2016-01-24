@@ -72,44 +72,69 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
     }
   }
 
+  protected void askUserHowToProceed() {
+    askUserForRecognitionSource(true);
+  }
+
   protected void askUserForRecognitionSource() {
+    askUserForRecognitionSource(false);
+  }
+
+  protected void askUserForRecognitionSource(boolean hasAnImageAlreadyBeenRecognized) {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setCancelable(false);
 
     try {
       View view = getLayoutInflater().inflate(R.layout.dialog_ask_user_for_recognition_source, null);
+      builder.setView(view);
+      AlertDialog alert = builder.create();
 
       TextView txtvwTakePicture = (TextView) view.findViewById(R.id.txtvwTakePicture);
-      txtvwTakePicture.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          startCamera();
-        }
-      });
-
       TextView txtvwSelectPictureFromGallery = (TextView) view.findViewById(R.id.txtvwSelectPictureFromGallery);
-      txtvwSelectPictureFromGallery.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          startGallery();
-        }
-      });
-
       TextView txtvwReturnToCallingApplication = (TextView) view.findViewById(R.id.txtvwReturnToCallingApplication);
-      txtvwReturnToCallingApplication.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          returnToCallingApplication();
-        }
-      });
 
+      setOnClickListeners(txtvwTakePicture, txtvwSelectPictureFromGallery, txtvwReturnToCallingApplication);
 
-      builder.setView(view);
-      builder.create().show();
+      if(hasAnImageAlreadyBeenRecognized) {
+        adjustOptionNames(txtvwTakePicture, txtvwSelectPictureFromGallery, txtvwReturnToCallingApplication);
+      }
+
+      alert.show();
     } catch(Exception ex) {
       log.error("Could not show dialog_ask_user_for_recognition_source", ex);
       returnToCallingApplication();
     }
+  }
+
+  protected void setOnClickListeners(TextView txtvwTakePicture, TextView txtvwSelectPictureFromGallery, TextView txtvwReturnToCallingApplication) {
+    txtvwTakePicture.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        startCamera();
+      }
+    });
+
+    txtvwSelectPictureFromGallery.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        startGallery();
+      }
+    });
+
+    txtvwReturnToCallingApplication.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        returnToCallingApplication();
+      }
+    });
+  }
+
+  protected void adjustOptionNames(TextView txtvwTakePicture, TextView txtvwSelectPictureFromGallery, TextView txtvwReturnToCallingApplication) {
+    txtvwTakePicture.setText(R.string.take_another_picture);
+
+    txtvwSelectPictureFromGallery.setText(R.string.select_another_picture_from_gallery);
+
+    txtvwReturnToCallingApplication.setText(R.string.return_to_calling_application);
   }
 
 
@@ -146,45 +171,6 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
 
   protected boolean isTakeNewImageActivityResult(int requestCode, int resultCode, Intent data) {
     return requestCode == REQUEST_CODE_CROP_PHOTO && resultCode == CropImageActivity.RESULT_NEW_IMAGE;
-  }
-
-  protected void askUserHowToProceed() {
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setCancelable(false);
-
-    try {
-      View view = getLayoutInflater().inflate(R.layout.dialog_ask_user_how_to_proceed, null);
-
-      TextView txtvwTakeAnotherPicture = (TextView) view.findViewById(R.id.txtvwTakeAnotherPicture);
-      txtvwTakeAnotherPicture.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          startCamera();
-        }
-      });
-
-      TextView txtvwSelectAnotherPictureFromGallery = (TextView) view.findViewById(R.id.txtvwSelectAnotherPictureFromGallery);
-      txtvwSelectAnotherPictureFromGallery.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          startGallery();
-        }
-      });
-
-      TextView txtvwReturnToCallingApplication = (TextView) view.findViewById(R.id.txtvwReturnToCallingApplication);
-      txtvwReturnToCallingApplication.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          returnToCallingApplication();
-        }
-      });
-
-      builder.setView(view);
-      builder.create().show();
-    } catch(Exception ex) {
-      log.error("Could not show dialog_ask_user_how_to_proceed", ex);
-      returnToCallingApplication();
-    }
   }
 
   protected void returnToCallingApplication() {
