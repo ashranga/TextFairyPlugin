@@ -29,10 +29,10 @@ public class PluginCropImageActivity extends CropImageActivity {
   }
 
   @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    boolean result = super.onCreateOptionsMenu(menu);
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    boolean result = super.onPrepareOptionsMenu(menu);
 
-    if(result) {
+    if(showActionItems()) {
       chosenLanguageAndLayoutItem = menu.findItem(R.id.item_chosen_language_and_layout);
       showMenuItemLanguageAndLayout(chosenLanguageAndLayoutItem);
 

@@ -163,7 +163,7 @@ public class CropImageActivity extends MonitoredActivity implements ImageBlurred
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        if (mCropData.isPresent()) {
+        if (showActionItems()) {
             menu.findItem(R.id.item_rotate_left).setVisible(true);
             menu.findItem(R.id.item_rotate_right).setVisible(true);
             menu.findItem(R.id.item_save).setVisible(true);
@@ -174,6 +174,10 @@ public class CropImageActivity extends MonitoredActivity implements ImageBlurred
             menu.findItem(R.id.item_save).setVisible(false);
             return true;
         }
+    }
+
+    protected boolean showActionItems() {
+        return mCropData.isPresent();
     }
 
     private void onRotateClicked(int delta) {
