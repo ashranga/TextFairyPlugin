@@ -93,7 +93,7 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
       TextView txtvwSelectPictureFromGallery = (TextView) view.findViewById(R.id.txtvwSelectPictureFromGallery);
       TextView txtvwReturnToCallingApplication = (TextView) view.findViewById(R.id.txtvwReturnToCallingApplication);
 
-      setOnClickListeners(txtvwTakePicture, txtvwSelectPictureFromGallery, txtvwReturnToCallingApplication);
+      setOnClickListeners(alert, txtvwTakePicture, txtvwSelectPictureFromGallery, txtvwReturnToCallingApplication);
 
       if(hasAnImageAlreadyBeenRecognized) {
         adjustOptionNames(txtvwTakePicture, txtvwSelectPictureFromGallery, txtvwReturnToCallingApplication);
@@ -106,10 +106,11 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
     }
   }
 
-  protected void setOnClickListeners(TextView txtvwTakePicture, TextView txtvwSelectPictureFromGallery, TextView txtvwReturnToCallingApplication) {
+  protected void setOnClickListeners(final AlertDialog alert, TextView txtvwTakePicture, TextView txtvwSelectPictureFromGallery, TextView txtvwReturnToCallingApplication) {
     txtvwTakePicture.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        alert.dismiss();
         startCamera();
       }
     });
@@ -117,6 +118,7 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
     txtvwSelectPictureFromGallery.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        alert.dismiss();
         startGallery();
       }
     });
@@ -124,6 +126,7 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
     txtvwReturnToCallingApplication.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
+        alert.dismiss();
         returnToCallingApplication();
       }
     });
