@@ -12,13 +12,28 @@
         android:gravity="center"
         android:text="@string/take_picture"/>
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/plugin_ask_user_for_recognition_source_divider_height"
+        android:background="@color/plugin_ask_user_for_recognition_source_divider_color"
+        android:layout_marginTop="@dimen/plugin_ask_user_for_recognition_source_divider_margin"
+        android:layout_marginBottom="@dimen/plugin_ask_user_for_recognition_source_divider_margin"
+        />
+
     <TextView
         android:id="@+id/txtvwSelectPictureFromGallery"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/plugin_ask_user_for_recognition_source_option_height"
+        android:layout_height="@dimen/plugin_ask_user_for_recognition_source_gallery_option_height"
         android:textSize="@dimen/plugin_ask_user_for_recognition_source_text_size"
         android:gravity="center"
         android:text="@string/select_picture_from_gallery"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="3dp"
+        android:background="#8b8b8b"
+        android:layout_marginTop="@dimen/plugin_ask_user_for_recognition_source_divider_margin"
+        android:layout_marginBottom="@dimen/plugin_ask_user_for_recognition_source_divider_margin"/>
 
     <TextView
         android:id="@+id/txtvwReturnToCallingApplication"
