@@ -18,6 +18,7 @@ package com.renard.ocr;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.util.Pair;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -42,6 +44,8 @@ public class LayoutQuestionDialog {
     public enum LayoutKind {
         SIMPLE, COMPLEX, DO_NOTHING;
     }
+
+    private static Context mContext;
 
     private static LayoutKind mLayout = LayoutKind.SIMPLE;
     private static String mLanguage;
@@ -73,6 +77,7 @@ public class LayoutQuestionDialog {
 
     public static AlertDialog createDialog(final Context context, final LayoutChoseListener listener, boolean accessibility, LayoutKind layoutKind, String language, boolean
         showInstallLanguageButton) {
+        mContext = context;
         mLayout = layoutKind;
         mLanguage = language;
 
@@ -166,6 +171,12 @@ public class LayoutQuestionDialog {
             }
         });
 
+        Button buttonInstallLanguage = (Button)layout.findViewById(R.id.button_install_language);
+        if(showInstallLanguageButton) {
+            buttonInstallLanguage.setVisibility(View.VISIBLE);
+        }
+        buttonInstallLanguage.setOnClickListener(buttonInstallLanguageClickListener);
+
 
         int positiveButtonText = R.string.start_scan;
         if(showInstallLanguageButton) { // really bad logic: as currently install button is only shown when dialog is created from PluginCropImageActivity, adjust positive button's caption
@@ -196,6 +207,21 @@ public class LayoutQuestionDialog {
 
         return dialog;
 
+    }
+
+
+    protected static View.OnClickListener buttonInstallLanguageClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            showInstallLanguageActivity();
+        }
+    };
+
+    protected static void showInstallLanguageActivity() {
+        if(mContext != null) {
+            Intent i = new Intent(mContext, OCRLanguageActivity.class);
+            mContext.startActivity(i);
+        }
     }
 
 }
