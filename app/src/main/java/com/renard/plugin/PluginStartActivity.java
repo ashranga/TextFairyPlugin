@@ -159,6 +159,8 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     if (requestCode == REQUEST_CODE_OCR) { // OCR process has completed
+      sendOcrResult(data);
+
       if (lastHandledIntent != null && lastHandledIntent.hasExtra(Constants.INTENT_KEY_IMAGE_TO_RECOGNIZE_URI)) { // we were only ask to do OCR on an image, don't ask User if she/he likes to process
         returnToCallingApplication();
       } else {
@@ -170,6 +172,15 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
     } else { // previous Action (take picture / select picture from gallery) has been cancelled
       askUserHowToProceed();
     }
+  }
+
+  protected void sendOcrResult(Intent data) {
+    sendOcrResult(data.getStringExtra(Constants.INTENT_KEY_OCR_RESULT_HOCR_STRING), data.getStringExtra(Constants.INTENT_KEY_OCR_RESULT_UTF8_STRING),
+                  data.getIntExtra(Constants.INTENT_KEY_OCR_RESULT_ACCURACY, 0));
+  }
+
+  protected void sendOcrResult(String hocrString, String utf8String, int accuracy) {
+    OcrResultDispatcher.sendOcrResult(this, hocrString, utf8String, accuracy);
   }
 
   protected boolean isTakeNewImageActivityResult(int requestCode, int resultCode, Intent data) {

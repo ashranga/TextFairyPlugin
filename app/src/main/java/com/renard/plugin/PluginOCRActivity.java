@@ -1,6 +1,7 @@
 package com.renard.plugin;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -42,7 +43,13 @@ public class PluginOCRActivity extends OCRActivity {
   }
 
   protected void sendOcrResultToCaller(String hocrString, String utf8String, int accuracy) {
-    OcrResultDispatcher.sendOcrResult(this, hocrString, utf8String, accuracy);
+    Intent resultIntent = new Intent(this, PluginStartActivity.class);
+
+    resultIntent.putExtra(Constants.INTENT_KEY_OCR_RESULT_HOCR_STRING, hocrString);
+    resultIntent.putExtra(Constants.INTENT_KEY_OCR_RESULT_UTF8_STRING, utf8String);
+    resultIntent.putExtra(Constants.INTENT_KEY_OCR_RESULT_ACCURACY, accuracy);
+
+    setResult(RESULT_OK, resultIntent);
   }
 
   protected void cleanupDialog(Pix pix) {

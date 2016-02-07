@@ -21,6 +21,11 @@ public class Constants {
   public final static String INTENT_KEY_SHOW_SETTINGS_UI = "ShowSettingsUi";
 
 
+  public final static String INTENT_KEY_OCR_RESULT_HOCR_STRING = "HOCR_String";
+  public final static String INTENT_KEY_OCR_RESULT_UTF8_STRING = "Utf8_String";
+  public final static String INTENT_KEY_OCR_RESULT_ACCURACY = "Accuracy";
+
+
   public final static String SEND_OCR_RESULT_INTENT_ACTION = "TextFairyOcrResult";
 
   public final static String IS_USER_CANCELLED_OCR_RESULT_EXTRA_NAME = "UserCancelled";
