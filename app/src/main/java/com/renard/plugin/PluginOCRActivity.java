@@ -24,10 +24,14 @@ public class PluginOCRActivity extends OCRActivity {
 
   @Override
   protected void readingDocumentDone(Pix pix, String hocrString, String utf8String, int accuracy) {
-    OcrResultDispatcher.ocrRecognitionSuccessful(this, hocrString, utf8String, accuracy);
+    sendOcrResultToCaller(hocrString, utf8String, accuracy);
 
     cleanupDialog(pix);
     finish();
+  }
+
+  protected void sendOcrResultToCaller(String hocrString, String utf8String, int accuracy) {
+    OcrResultDispatcher.sendOcrResult(this, hocrString, utf8String, accuracy);
   }
 
   protected void cleanupDialog(Pix pix) {
@@ -45,11 +49,10 @@ public class PluginOCRActivity extends OCRActivity {
     startOcrLayoutAnalysis(pixOrg, PreferencesUtils.getPluginLastSelectedOCRLanguage(this), PreferencesUtils.getPluginLastSelectedLayoutKind(this));
   }
 
-  // avoid saving documents / images
 
   @Override
   protected void saveDocument(Pix pix, String hocrString, String utf8String, int accuracy) {
-
+    // avoid saving documents / images
   }
 
   // these to methods may can be removed

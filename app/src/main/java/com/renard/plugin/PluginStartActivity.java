@@ -158,7 +158,7 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
 
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    if (requestCode == REQUEST_CODE_OCR) {
+    if (requestCode == REQUEST_CODE_OCR) { // OCR process has completed
       if (lastHandledIntent != null && lastHandledIntent.hasExtra(Constants.INTENT_KEY_IMAGE_TO_RECOGNIZE_URI)) { // we were only ask to do OCR on an image, don't ask User if she/he likes to process
         returnToCallingApplication();
       } else {
@@ -177,9 +177,13 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
   }
 
   protected void returnToCallingApplication() {
-    OcrResultDispatcher.ocrRecognitionProcessDone(this);
+    sendOcrProcessDone();
 
     finish();
+  }
+
+  protected void sendOcrProcessDone() {
+    OcrResultDispatcher.sendOcrProcessDone(this);
   }
 
 
