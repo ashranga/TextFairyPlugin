@@ -9,27 +9,6 @@ import android.util.Log;
  */
 public class OcrResultDispatcher {
 
-  public static void ocrRecognitionCancelledByUser(Context context) {
-    Intent sendIntent = new Intent();
-    sendIntent.setAction(Constants.SEND_OCR_RESULT_INTENT_ACTION); // TODO: really use a generic action? What if several applications have registered a Broadcast Receiver for
-    // this action? Why not letting calling application defining Action value (e.g. over a Intent.putExtra() value)?
-    sendIntent.putExtra(Constants.IS_USER_CANCELLED_OCR_RESULT_EXTRA_NAME, true);
-    sendIntent.putExtra(Constants.IS_DONE_OCR_RESULT_EXTRA_NAME, true);
-
-    context.sendBroadcast(sendIntent);
-  }
-
-  public static void ocrRecognitionError(Context context, String errorMessage) {
-    Intent sendIntent = new Intent();
-    sendIntent.setAction(Constants.SEND_OCR_RESULT_INTENT_ACTION); // TODO: really use a generic action? What if several applications have registered a Broadcast Receiver for
-    // this action? Why not letting calling application defining Action value (e.g. over a Intent.putExtra() value)?
-    sendIntent.putExtra(Constants.RECOGNITION_SUCCESSFUL_OCR_RESULT_EXTRA_NAME, false);
-    sendIntent.putExtra(Constants.ERROR_MESSAGE_OCR_RESULT_EXTRA_NAME, errorMessage);
-//    sendIntent.putExtra(Constants.IS_DONE_OCR_RESULT_EXTRA_NAME, true);
-
-    context.sendBroadcast(sendIntent);
-  }
-
   public static void sendOcrResult(Context context, String hocrString, String utf8String, int accuracy) {
     Intent sendIntent = new Intent();
     sendIntent.setAction(Constants.SEND_OCR_RESULT_INTENT_ACTION); // TODO: really use a generic action? What if several applications have registered a Broadcast Receiver for
@@ -43,6 +22,17 @@ public class OcrResultDispatcher {
 
 //    sendIntent.putExtra(Constants.IS_DONE_OCR_RESULT_EXTRA_NAME, false);
 //    sendIntent.setType("text/plain");
+
+    context.sendBroadcast(sendIntent);
+  }
+
+  public static void sendOcrError(Context context, String errorMessage) {
+    Intent sendIntent = new Intent();
+    sendIntent.setAction(Constants.SEND_OCR_RESULT_INTENT_ACTION); // TODO: really use a generic action? What if several applications have registered a Broadcast Receiver for
+    // this action? Why not letting calling application defining Action value (e.g. over a Intent.putExtra() value)?
+    sendIntent.putExtra(Constants.RECOGNITION_SUCCESSFUL_OCR_RESULT_EXTRA_NAME, false);
+    sendIntent.putExtra(Constants.ERROR_MESSAGE_OCR_RESULT_EXTRA_NAME, errorMessage);
+//    sendIntent.putExtra(Constants.IS_DONE_OCR_RESULT_EXTRA_NAME, true);
 
     context.sendBroadcast(sendIntent);
   }

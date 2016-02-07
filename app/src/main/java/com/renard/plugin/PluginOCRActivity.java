@@ -1,5 +1,6 @@
 package com.renard.plugin;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -20,6 +21,16 @@ public class PluginOCRActivity extends OCRActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+  }
+
+  @Override
+  protected void ocrErrorOccurred(Context context, String errorMessage) {
+    sendOcrErrorOccurred(context, errorMessage);
+    super.ocrErrorOccurred(context, errorMessage);
+  }
+
+  protected void sendOcrErrorOccurred(Context context, String errorMessage) {
+    OcrResultDispatcher.sendOcrError(context, errorMessage);
   }
 
   @Override

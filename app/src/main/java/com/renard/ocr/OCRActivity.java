@@ -18,6 +18,7 @@ package com.renard.ocr;
 import android.app.AlertDialog;
 import android.content.ContentProviderClient;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
@@ -206,11 +207,19 @@ public class OCRActivity extends MonitoredActivity {
                     break;
                 }
                 case OCR.MESSAGE_ERROR: {
-                    Toast.makeText(getApplicationContext(), getText(msg.arg1), Toast.LENGTH_LONG).show();
+                    ocrErrorOccurred(msg);
                     break;
                 }
             }
         }
+    }
+
+    protected void ocrErrorOccurred(Message msg) {
+        ocrErrorOccurred(getApplicationContext(), (String) getText(msg.arg1));
+    }
+
+    protected void ocrErrorOccurred(Context context, String errorMessage) {
+        Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
     }
 
     protected void readingDocumentDone(Pix finalPix, String hocrString, String utf8String, int accuracy) {
