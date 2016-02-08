@@ -226,9 +226,28 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
   }
 
   @Override
-  protected void showFileError(PixLoadStatus second, DialogInterface.OnClickListener positiveListener) {
+  protected void showFileError(PixLoadStatus second, final DialogInterface.OnClickListener positiveListener) {
     sendOcrError(getErrorMessageForPixLoadStatus(second));
-    super.showFileError(second, positiveListener);
+
+    super.showFileError(second, new DialogInterface.OnClickListener() {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        if(positiveListener != null) {
+          positiveListener.onClick(dialog, which);
+        }
+
+        fileErrorMessageDialogDismissed();
+      }
+    });
+  }
+
+  protected void fileErrorMessageDialogDismissed() {
+    if(lastSource == OcrSource.RecognizeFromUri) { // the provided image could not be processed -> return to caller
+      finish();
+    }
+    else {
+      askUserHowToProceed();
+    }
   }
 
   protected void sendOcrError(int errorMessageId) {
