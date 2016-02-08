@@ -31,7 +31,11 @@ public class PluginOCRActivity extends OCRActivity {
   }
 
   protected void sendOcrErrorOccurred(Context context, String errorMessage) {
-    OcrResultDispatcher.sendOcrError(context, errorMessage);
+    Intent errorMessageIntent = new Intent(context, PluginStartActivity.class);
+
+    errorMessageIntent.putExtra(Constants.ERROR_MESSAGE_OCR_RESULT_EXTRA_NAME, errorMessage);
+
+    setResult(RESULT_CANCELED, errorMessageIntent);
   }
 
   @Override

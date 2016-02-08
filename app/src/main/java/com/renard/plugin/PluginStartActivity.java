@@ -26,8 +26,10 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
 
   protected static Intent lastHandledIntent = null;
 
-  protected OcrSource lastSource;
-  protected String lastSourceUri;
+  protected static String callingApplicationPackageName = null;
+
+  protected static OcrSource lastSource;
+  protected static String lastSourceUri;
 
 
   @Override
@@ -37,16 +39,24 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
 
     InstallHelper.startInstallActivityIfNeeded(this);
 
+    handleCallerIntent();
+  }
+
+  protected void handleCallerIntent() {
     Intent intent = getIntent();
-    if(intent == null)
+
+    if(intent == null) {
       startCamera();
+    }
     else if(intent != lastHandledIntent) {
       lastHandledIntent = intent;
-      handleIntent(intent);
+      handleCallerIntent(intent);
     }
   }
 
-  protected void handleIntent(Intent intent) {
+  protected void handleCallerIntent(Intent intent) {
+    extractCallingApplicationPackageName(intent);
+
     if(intent.hasExtra(Constants.OCR_SOURCE_EXTRA_NAME)) {
       String recognitionSource = intent.getStringExtra(Constants.OCR_SOURCE_EXTRA_NAME);
 
@@ -61,6 +71,15 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
       }
     } else {
       askUserForRecognitionSource();
+    }
+  }
+
+  protected void extractCallingApplicationPackageName(Intent intent) {
+    if(intent.hasExtra(Constants.CALLING_APPLICATION_PACKAGE_NAME_EXTRA_NAME)) {
+      callingApplicationPackageName = intent.getStringExtra(Constants.CALLING_APPLICATION_PACKAGE_NAME_EXTRA_NAME);
+    }
+    else {
+      callingApplicationPackageName = null;
     }
   }
 
@@ -197,7 +216,11 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
       if(mCameraResult != null && lastSource == OcrSource.ChoseImageFromGallery) {
         lastSourceUri = mCameraResult.mData.getDataString();
       }
-    } else { // previous Action (take picture / select picture from gallery) has been cancelled
+    }
+    else if(resultCode == RESULT_CANCELED && data != null && data.hasExtra(Constants.ERROR_MESSAGE_OCR_RESULT_EXTRA_NAME)) {
+      sendOcrError(data.getStringExtra(Constants.ERROR_MESSAGE_OCR_RESULT_EXTRA_NAME));
+    }
+    else { // previous Action (take picture / select picture from gallery) has been cancelled
       askUserHowToProceed();
     }
   }
@@ -208,7 +231,7 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
   }
 
   protected void sendOcrResult(String hocrString, String utf8String, int accuracy) {
-    OcrResultDispatcher.sendOcrResult(this, hocrString, utf8String, accuracy, lastSource, getOcrSourceUri(lastSource));
+    OcrResultDispatcher.sendOcrResult(this, callingApplicationPackageName, hocrString, utf8String, accuracy, lastSource, getOcrSourceUri(lastSource));
   }
 
   protected String getOcrSourceUri(OcrSource lastSource) {
@@ -255,7 +278,7 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
   }
 
   protected void sendOcrError(String errorMessage) {
-    OcrResultDispatcher.sendOcrError(this, errorMessage);
+    OcrResultDispatcher.sendOcrError(this, callingApplicationPackageName, errorMessage);
   }
 
   protected void returnToCallingApplication() {
@@ -265,7 +288,7 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
   }
 
   protected void sendOcrProcessDone() {
-    OcrResultDispatcher.sendOcrProcessDone(this);
+    OcrResultDispatcher.sendOcrProcessDone(this, callingApplicationPackageName);
   }
 
 

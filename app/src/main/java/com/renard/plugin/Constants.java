@@ -5,6 +5,9 @@ package com.renard.plugin;
  */
 public class Constants {
 
+  public final static String CALLING_APPLICATION_PACKAGE_NAME_EXTRA_NAME = "CallingApplicationPackageName";
+
+
   public final static String OCR_SOURCE_EXTRA_NAME = "OcrSource";
 
   public final static String OCR_SOURCE_RECOGNIZE_FROM_URI = "RecognizeFromUri";
