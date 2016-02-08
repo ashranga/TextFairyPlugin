@@ -237,4 +237,6 @@
 
     <string name="menu_item_set_language_and_layout_title">Sprache und Layout setzen</string>
 
+    <string name="error_image_source_not_set">Keine Bildpfad angegeben.</string>
+
 </resources>

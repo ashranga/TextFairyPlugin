@@ -1,6 +1,7 @@
 package com.renard.plugin;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.renard.install.InstallHelper;
 import com.renard.ocr.BaseDocumentActivitiy;
 import com.renard.ocr.ImageSource;
+import com.renard.ocr.PixLoadStatus;
 import com.renard.ocr.R;
 import com.renard.ocr.cropimage.CropImageActivity;
 
@@ -73,7 +75,7 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
       loadBitmapFromContentUri(imageUri, ImageSource.INTENT, !showSettingsUi);
     }
     else {
-      // TODO: show Alert that Image Source is not set
+      sendOcrError(R.string.error_image_source_not_set);
     }
   }
 
@@ -221,6 +223,20 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
 
   protected boolean isTakeNewImageActivityResult(int requestCode, int resultCode, Intent data) {
     return requestCode == REQUEST_CODE_CROP_PHOTO && resultCode == CropImageActivity.RESULT_NEW_IMAGE;
+  }
+
+  @Override
+  protected void showFileError(PixLoadStatus second, DialogInterface.OnClickListener positiveListener) {
+    sendOcrError(getErrorMessageForPixLoadStatus(second));
+    super.showFileError(second, positiveListener);
+  }
+
+  protected void sendOcrError(int errorMessageId) {
+    sendOcrError((String)getText(errorMessageId));
+  }
+
+  protected void sendOcrError(String errorMessage) {
+    OcrResultDispatcher.sendOcrError(this, errorMessage);
   }
 
   protected void returnToCallingApplication() {

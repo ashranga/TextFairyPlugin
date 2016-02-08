@@ -240,4 +240,6 @@
 
     <string name="menu_item_set_language_and_layout_title">Set Language and Layout</string>
 
+    <string name="error_image_source_not_set">Image Source not set.</string>
+
 </resources>

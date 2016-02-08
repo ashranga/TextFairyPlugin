@@ -475,6 +475,18 @@ public abstract class BaseDocumentActivitiy extends MonitoredActivity {
     }
 
     protected void showFileError(PixLoadStatus second, OnClickListener positiveListener) {
+        int textId = getErrorMessageForPixLoadStatus(second);
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle(R.string.error_title);
+        final TextView textview = new TextView(this);
+        textview.setText(textId);
+        alert.setView(textview);
+        alert.setPositiveButton(android.R.string.ok, positiveListener);
+        alert.show();
+    }
+
+    protected int getErrorMessageForPixLoadStatus(PixLoadStatus second) {
         int textId;
         switch (second) {
             case IMAGE_NOT_32_BIT:
@@ -507,14 +519,7 @@ public abstract class BaseDocumentActivitiy extends MonitoredActivity {
             default:
                 textId = R.string.error_could_not_take_photo;
         }
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle(R.string.error_title);
-        final TextView textview = new TextView(this);
-        textview.setText(textId);
-        alert.setView(textview);
-        alert.setPositiveButton(android.R.string.ok, positiveListener);
-        alert.show();
+        return textId;
     }
 
     @Override
