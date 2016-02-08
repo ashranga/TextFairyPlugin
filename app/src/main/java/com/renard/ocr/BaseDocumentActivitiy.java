@@ -113,14 +113,14 @@ public abstract class BaseDocumentActivitiy extends MonitoredActivity {
     private static final String IMAGE_SOURCE = "image_source";
     private static Date dateCameraIntentStarted = null;
     private static final String CAMERA_PIC_URI_STATE = "com.renard.ocr.android.photo.TakePhotoActivity.CAMERA_PIC_URI_STATE";
-    private static Uri cameraPicUri = null;
+    protected static Uri cameraPicUri = null;
     private static final String ROTATE_X_DEGREES_STATE = "com.renard.ocr.android.photo.TakePhotoActivity.ROTATE_X_DEGREES_STATE";
     private static int rotateXDegrees = 0;
     private boolean mReceiverRegistered = false;
     private ImageSource mImageSource = ImageSource.CAMERA;
 
 
-    private static class CameraResult {
+    public static class CameraResult {
         public CameraResult(int requestCode, int resultCode, Intent data, ImageSource source) {
             mRequestCode = requestCode;
             mResultCode = resultCode;
@@ -128,10 +128,10 @@ public abstract class BaseDocumentActivitiy extends MonitoredActivity {
             mSource = source;
         }
 
-        private int mRequestCode;
-        private int mResultCode;
-        private Intent mData;
-        private final ImageSource mSource;
+        public int mRequestCode;
+        public int mResultCode;
+        public Intent mData;
+        public final ImageSource mSource;
     }
 
     protected abstract int getParentId();
@@ -139,7 +139,7 @@ public abstract class BaseDocumentActivitiy extends MonitoredActivity {
     private ProgressDialog pdfProgressDialog;
     private ProgressDialog deleteProgressDialog;
     private AsyncTask<Void, Void, Pair<Pix, PixLoadStatus>> mBitmapLoadTask;
-    private CameraResult mCameraResult;
+    protected CameraResult mCameraResult;
 
     protected void startGallery() {
         cameraPicUri = null;
@@ -355,7 +355,6 @@ public abstract class BaseDocumentActivitiy extends MonitoredActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (RESULT_OK == resultCode) {
             switch (requestCode) {
                 case REQUEST_CODE_CROP_PHOTO: {

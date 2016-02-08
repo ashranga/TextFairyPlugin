@@ -24,6 +24,9 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
 
   protected static Intent lastHandledIntent = null;
 
+  protected OcrSource lastSource;
+  protected String lastSourceUri;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +45,14 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
   }
 
   protected void handleIntent(Intent intent) {
-    if(intent.hasExtra(Constants.INTENT_KEY_RECOGNITION_SOURCE)) {
-      String recognitionSource = intent.getStringExtra(Constants.INTENT_KEY_RECOGNITION_SOURCE);
+    if(intent.hasExtra(Constants.OCR_SOURCE_EXTRA_NAME)) {
+      String recognitionSource = intent.getStringExtra(Constants.OCR_SOURCE_EXTRA_NAME);
 
-      if(Constants.RECOGNITION_SOURCE_RECOGNIZE_FROM_URI.equals(recognitionSource)) {
+      if(Constants.OCR_SOURCE_RECOGNIZE_FROM_URI.equals(recognitionSource)) {
         recognizeTextOfAProvidedImage(intent);
-      } else if(Constants.RECOGNITION_SOURCE_CAPTURE_IMAGE.equals(recognitionSource)) {
+      } else if(Constants.OCR_SOURCE_CAPTURE_IMAGE.equals(recognitionSource)) {
         startCamera();
-      } else if(Constants.RECOGNITION_SOURCE_GET_FROM_GALLERY.equals(recognitionSource)) {
+      } else if(Constants.OCR_SOURCE_GET_FROM_GALLERY.equals(recognitionSource)) {
         startGallery();
       } else { // if recognitionSource equals Constants.RECOGNITION_SOURCE_ASK_USER or an unknown value is supplied
         askUserForRecognitionSource();
@@ -60,16 +63,36 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
   }
 
   protected void recognizeTextOfAProvidedImage(Intent intent) {
-    String imageUriString = intent.getStringExtra(Constants.INTENT_KEY_IMAGE_TO_RECOGNIZE_URI);
+    lastSource = OcrSource.RecognizeFromUri;
+
+    String imageUriString = intent.getStringExtra(Constants.IMAGE_TO_RECOGNIZE_URI_EXTRA_NAME);
     if(imageUriString != null) {
       Uri imageUri = Uri.parse(imageUriString); // TODO: if imageUri points a Web image, download image
-      boolean showSettingsUi = intent.getBooleanExtra(Constants.INTENT_KEY_SHOW_SETTINGS_UI, false);
+      boolean showSettingsUi = intent.getBooleanExtra(Constants.SHOW_SETTINGS_UI_EXTRA_NAME, false);
 
       loadBitmapFromContentUri(imageUri, ImageSource.INTENT, !showSettingsUi);
     }
     else {
       // TODO: show Alert that Image Source is not set
     }
+  }
+
+  @Override
+  protected void startCamera() {
+    lastSource = OcrSource.CaptureImage;
+
+    super.startCamera();
+
+    if(cameraPicUri != null) {
+      lastSourceUri = cameraPicUri.toString();
+    }
+  }
+
+  @Override
+  protected void startGallery() {
+    lastSource = OcrSource.ChoseImageFromGallery;
+
+    super.startGallery();
   }
 
   protected void askUserHowToProceed() {
@@ -161,7 +184,7 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
     if (requestCode == REQUEST_CODE_OCR) { // OCR process has completed
       sendOcrResult(data);
 
-      if (lastHandledIntent != null && lastHandledIntent.hasExtra(Constants.INTENT_KEY_IMAGE_TO_RECOGNIZE_URI)) { // we were only ask to do OCR on an image, don't ask User if she/he likes to process
+      if (lastHandledIntent != null && lastHandledIntent.hasExtra(Constants.IMAGE_TO_RECOGNIZE_URI_EXTRA_NAME)) { // we were only ask to do OCR on an image, don't ask User if she/he likes to process
         returnToCallingApplication();
       } else {
         askUserHowToProceed();
@@ -169,18 +192,31 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
     }
     else if(resultCode == RESULT_OK || isTakeNewImageActivityResult(requestCode, resultCode, data)) { // let BaseDocumentActivity handle this result
       super.onActivityResult(requestCode, resultCode, data);
+      if(mCameraResult != null && lastSource == OcrSource.ChoseImageFromGallery) {
+        lastSourceUri = mCameraResult.mData.getDataString();
+      }
     } else { // previous Action (take picture / select picture from gallery) has been cancelled
       askUserHowToProceed();
     }
   }
 
   protected void sendOcrResult(Intent data) {
-    sendOcrResult(data.getStringExtra(Constants.INTENT_KEY_OCR_RESULT_HOCR_STRING), data.getStringExtra(Constants.INTENT_KEY_OCR_RESULT_UTF8_STRING),
-                  data.getIntExtra(Constants.INTENT_KEY_OCR_RESULT_ACCURACY, 0));
+    sendOcrResult(data.getStringExtra(Constants.HOCR_OCR_RESULT_EXTRA_NAME), data.getStringExtra(Constants.UTF8_OCR_RESULT_EXTRA_NAME),
+        data.getIntExtra(Constants.ACCURACY_OCR_RESULT_EXTRA_NAME, 0));
   }
 
   protected void sendOcrResult(String hocrString, String utf8String, int accuracy) {
-    OcrResultDispatcher.sendOcrResult(this, hocrString, utf8String, accuracy);
+    OcrResultDispatcher.sendOcrResult(this, hocrString, utf8String, accuracy, lastSource, getOcrSourceUri(lastSource));
+  }
+
+  protected String getOcrSourceUri(OcrSource lastSource) {
+    if(lastSource == OcrSource.RecognizeFromUri) {
+      if(lastHandledIntent != null && lastHandledIntent.hasExtra(Constants.IMAGE_TO_RECOGNIZE_URI_EXTRA_NAME)) {
+        return lastHandledIntent.getStringExtra(Constants.IMAGE_TO_RECOGNIZE_URI_EXTRA_NAME);
+      }
+    }
+
+    return lastSourceUri;
   }
 
   protected boolean isTakeNewImageActivityResult(int requestCode, int resultCode, Intent data) {

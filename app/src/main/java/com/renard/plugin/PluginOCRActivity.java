@@ -45,9 +45,9 @@ public class PluginOCRActivity extends OCRActivity {
   protected void sendOcrResultToCaller(String hocrString, String utf8String, int accuracy) {
     Intent resultIntent = new Intent(this, PluginStartActivity.class);
 
-    resultIntent.putExtra(Constants.INTENT_KEY_OCR_RESULT_HOCR_STRING, hocrString);
-    resultIntent.putExtra(Constants.INTENT_KEY_OCR_RESULT_UTF8_STRING, utf8String);
-    resultIntent.putExtra(Constants.INTENT_KEY_OCR_RESULT_ACCURACY, accuracy);
+    resultIntent.putExtra(Constants.HOCR_OCR_RESULT_EXTRA_NAME, hocrString);
+    resultIntent.putExtra(Constants.UTF8_OCR_RESULT_EXTRA_NAME, utf8String);
+    resultIntent.putExtra(Constants.ACCURACY_OCR_RESULT_EXTRA_NAME, accuracy);
 
     setResult(RESULT_OK, resultIntent);
   }
