@@ -6,7 +6,7 @@ package com.renard.plugin;
 public enum OcrSource {
 
   CaptureImage,
-  ChoseImageFromGallery,
+  SelectAnExistingImageOnDevice,
   RecognizeFromUri,
   AskUser
 

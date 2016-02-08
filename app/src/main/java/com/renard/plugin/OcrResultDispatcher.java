@@ -39,8 +39,8 @@ public class OcrResultDispatcher {
     switch(source) {
       case CaptureImage:
         return Constants.OCR_SOURCE_CAPTURE_IMAGE;
-      case ChoseImageFromGallery:
-        return Constants.OCR_SOURCE_GET_FROM_GALLERY;
+      case SelectAnExistingImageOnDevice:
+        return Constants.OCR_SOURCE_SELECT_AN_EXISTING_IMAGE_FROM_DEVICE;
       case RecognizeFromUri:
         return Constants.OCR_SOURCE_RECOGNIZE_FROM_URI;
       default:

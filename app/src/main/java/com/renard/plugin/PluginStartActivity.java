@@ -64,7 +64,7 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
         recognizeTextOfAProvidedImage(intent);
       } else if(Constants.OCR_SOURCE_CAPTURE_IMAGE.equals(recognitionSource)) {
         startCamera();
-      } else if(Constants.OCR_SOURCE_GET_FROM_GALLERY.equals(recognitionSource)) {
+      } else if(Constants.OCR_SOURCE_SELECT_AN_EXISTING_IMAGE_FROM_DEVICE.equals(recognitionSource)) {
         startGallery();
       } else { // if recognitionSource equals Constants.RECOGNITION_SOURCE_ASK_USER or an unknown value is supplied
         askUserForRecognitionSource();
@@ -111,7 +111,7 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
 
   @Override
   protected void startGallery() {
-    lastSource = OcrSource.ChoseImageFromGallery;
+    lastSource = OcrSource.SelectAnExistingImageOnDevice;
 
     super.startGallery();
   }
@@ -213,7 +213,7 @@ public class PluginStartActivity extends BaseDocumentActivitiy {
     }
     else if(resultCode == RESULT_OK || isTakeNewImageActivityResult(requestCode, resultCode, data)) { // let BaseDocumentActivity handle this result
       super.onActivityResult(requestCode, resultCode, data);
-      if(mCameraResult != null && lastSource == OcrSource.ChoseImageFromGallery) {
+      if(mCameraResult != null && lastSource == OcrSource.SelectAnExistingImageOnDevice) {
         lastSourceUri = mCameraResult.mData.getDataString();
       }
     }
